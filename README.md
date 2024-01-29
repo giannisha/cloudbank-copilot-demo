@@ -65,11 +65,11 @@ const config = {
 
 You should also find and replace all the relevant appearances for the placeholder texts below,
 
-- <APP CLIENT ID> - Microsoft Entra
-- <TENANT ID> - Microsoft Entra
-- <APP CLIENT SECRET> - Microsoft Entra
-- <YOUR SPEECH STUDIO KEY> - Speech Studio
-- <YOUR SPEECH STUDIO REGION> - Speech Studio
+- `<APP CLIENT ID>` - Microsoft Entra
+- `<TENANT ID>` - Microsoft Entra
+- `<APP CLIENT SECRET>` - Microsoft Entra
+- `<YOUR SPEECH STUDIO KEY>` - Speech Studio
+- `<YOUR SPEECH STUDIO REGION>` - Speech Studio
 
 
 ### Step 1. Deploy Infra
