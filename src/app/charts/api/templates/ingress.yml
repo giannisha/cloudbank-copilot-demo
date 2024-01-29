@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Chart.Name }}-ingress
+  labels:
+    app: {{ .Chart.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ .Values.workload.domainname | quote }}
+    http:
+      paths:
+      - path: /api # The path prefix MUST NOT overlap with any other ingress definition of another exposed service
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Values.appName }}-service
+            port:
+              number: {{ .Values.workload.service.port | default 80 }}

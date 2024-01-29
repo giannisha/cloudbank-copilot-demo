@@ -1,0 +1,2 @@
+Based on the following analysis, what is the monthly average balance? Reply with only the amount and without text
+{analysis} 

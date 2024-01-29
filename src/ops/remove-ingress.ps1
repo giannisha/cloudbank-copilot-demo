@@ -1,0 +1,1 @@
+helm uninstall ingress-nginx -n ingress-nginx

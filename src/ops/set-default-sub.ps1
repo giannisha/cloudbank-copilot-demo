@@ -1,0 +1,1 @@
+az account set --subscription $env:DEFAULT_SUBSCRIPTION_ID

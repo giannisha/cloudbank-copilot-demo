@@ -1,0 +1,39 @@
+@host = http://localhost:5014
+# @host = http://cloudbanksimple-aks.eastus.cloudapp.azure.com
+
+@access_token = eyJ0eXAiOiJKV1QiLCJub25jZSI6Ii1HRmNJT1BYdUJPblV0Tmx1WHIxVXZCdlpFcEJKNTdfME5mel90RGM2NG8iLCJhbGciOiJSUzI1NiIsIng1dCI6IjVCM25SeHRRN2ppOGVORGMzRnkwNUtmOTdaRSIsImtpZCI6IjVCM25SeHRRN2ppOGVORGMzRnkwNUtmOTdaRSJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDAiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC9kZDJlODU5Ny00MTM3LTQ1NzktOTcyYi1hMDE5OGI1ODE2YWEvIiwiaWF0IjoxNzA2MTk2NTk1LCJuYmYiOjE3MDYxOTY1OTUsImV4cCI6MTcwNjIwMTIyMCwiYWNjdCI6MCwiYWNyIjoiMSIsImFpbyI6IkFUUUF5LzhWQUFBQXRwTnVtcXJMMG9uN3l4RlpaK1UwbG1PdXlCUWhjcU9Cait0bDFQUklndkNYb1ZBYnVSc0gxcGVhTWx6YlE4QTAiLCJhbXIiOlsicHdkIl0sImFwcF9kaXNwbGF5bmFtZSI6IkNsb3VkQmFuayBEZW1vIEFwcCIsImFwcGlkIjoiNmMxOTIyOGUtZjhjMS00NjQxLWFiNjctNGZhMjdjNDFjYzVmIiwiYXBwaWRhY3IiOiIxIiwiZGV2aWNlaWQiOiI3NWIxOTdmNy1kNDhmLTRmMDEtOTcwMy01ZDM2OTgxZGQ3NDciLCJmYW1pbHlfbmFtZSI6IkFkbWluaXN0cmF0b3IiLCJnaXZlbl9uYW1lIjoiTU9EIiwiaWR0eXAiOiJ1c2VyIiwiaXBhZGRyIjoiMmEwMjo1ODY6NGIzNjoyYmQ0OjdjMzQ6YmQ5MjplYmY6NTc1MyIsIm5hbWUiOiJNT0QgQWRtaW5pc3RyYXRvciIsIm9pZCI6ImIzOGNmOWI2LWU3YTYtNDVlMC1iNmQ3LWQ0MWRlZTI1ODYxMiIsInBsYXRmIjoiMyIsInB1aWQiOiIxMDAzMjAwMzI5OUNDQTRFIiwicmgiOiIwLkFWRUFsNFV1M1RkQmVVV1hLNkFaaTFnV3FnTUFBQUFBQUFBQXdBQUFBQUFBQUFEUUFONC4iLCJzY3AiOiJvcGVuaWQgcHJvZmlsZSBVc2VyLlJlYWQgZW1haWwiLCJzdWIiOiJCZGtGWUNUa1hHM0VGWWx5NVV1dTlyQjdmdjI5MmtxQ3lfVDRabWJkYnd3IiwidGVuYW50X3JlZ2lvbl9zY29wZSI6Ik5BIiwidGlkIjoiZGQyZTg1OTctNDEzNy00NTc5LTk3MmItYTAxOThiNTgxNmFhIiwidW5pcXVlX25hbWUiOiJhZG1pbkBNMzY1dDI5NzEyMTk3Lm9ubWljcm9zb2Z0LmNvbSIsInVwbiI6ImFkbWluQE0zNjV0Mjk3MTIxOTcub25taWNyb3NvZnQuY29tIiwidXRpIjoiZTF2T1RlV01JRXlVWV95LV9pUGJBQSIsInZlciI6IjEuMCIsIndpZHMiOlsiNjJlOTAzOTQtNjlmNS00MjM3LTkxOTAtMDEyMTc3MTQ1ZTEwIiwiYjc5ZmJmNGQtM2VmOS00Njg5LTgxNDMtNzZiMTk0ZTg1NTA5Il0sInhtc19zdCI6eyJzdWIiOiJ6NEFHLXByLXozRndIQnpVcHk1QjFlNUE3SHJZWGxGNFNYdndyVG0tc3RNIn0sInhtc190Y2R0IjoxNzAyNjMwMzUwfQ.nrnpUDl63lxUAKn89b0LSOVKSDGtPR0jyuNUm3EtddN8_NWBg0ATO1X71EWrMhCB7o43wRItvrnsO0KN5rsyvIg1r-BLz473gcnIBjqaOkeXLF8Ee0lIs1XTHB40A2JF6fuC54CpB26HHN7N9OUyQ79X6eTfq-0_mpTqF5NbSZ4O_4vQMIbBxhmsmHXZTQ3MazshK1yKV2QkBuxlcyeQtCFTyXC5ounasn_6qawSKFu1GvdSNoVfYDPJK1Cx7j7E6LGAb09NhteOXWZZRbPmh46sjF_yYCeVgZZTH-LZlt4aKaF28azGw7aUImdjgV67S4fOlF0Fes7c7Vr8w5B8WQ
+
+### Get transactions of a specific account
+GET {{host}}/api/accounts/100001/transactions
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+### Get transactions across accounts
+GET {{host}}/api/accounts/transactions
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+### Get transactions across cards 
+GET {{host}}/api/cards/transactions
+Accept: application/json
+# Authorization: Bearer {{access_token}}
+
+### Get loan caclculation
+GET {{host}}/api/loans/calc?loanAmount=1000&months=12
+Accept: application/json
+
+
+### Create a new notification
+POST {{host}}/api/notifications
+Content-Type: application/json
+
+{
+  "title": "Credit Card Application",
+  "description": "Application for Black Belt Credit Card create",
+  "imgSrc": "https://cloudbankfiles.blob.core.windows.net/files/bar-chart.png?sp=r&st=2024-01-21T16:57:40Z&se=2024-02-22T00:57:40Z&spr=https&sv=2022-11-02&sr=b&sig=ebg8mp801LelJ6Kn95IKc7285swGycOZOeUyc18V%2FOA%3D",
+  "comments": "a comment"
+}
+
+### Get all notifications
+GET {{host}}/api/notifications
+Content-Type: application/json

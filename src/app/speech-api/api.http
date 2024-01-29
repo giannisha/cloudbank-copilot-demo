@@ -1,0 +1,10 @@
+@host = http://localhost:5000
+# @host = http://cloudbanksimple-aks.eastus.cloudapp.azure.com
+
+### Generate Speech
+POST {{host}}/speech-api/generate 
+Content-Type: application/json
+
+{
+  "text": "Based on the information provided, if the monthly balance is 0 and there is a need to pay an extra installment of 599.42, the available balance is not sufficient. It is important to have a positive balance to cover expenses and avoid financial difficulties."
+}

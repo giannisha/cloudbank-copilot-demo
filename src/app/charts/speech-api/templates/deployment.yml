@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appName }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.appName }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.appName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appName }}
+        azure.workload.identity/use: "true"
+    spec:
+      serviceAccountName: {{ .Chart.Name }}-identity
+      containers:
+      - name: {{ .Values.appName }}
+        image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+        env:
+          - name: "AZURE_REGION" # This value only gets calculated at application deployment time so it does not exist in Key Vault as a secret (plus, it is not secret)
+            value: {{ .Values.azure.region }}
+        volumeMounts:
+          - name: tmp-volume
+            mountPath: "/tmp"
+          - name: var-log-volume
+            mountPath: "/var/log"
+      nodeSelector:
+        "role": "workload"
+      tolerations:
+      - key: "workload"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+      volumes:
+        - name: tmp-volume
+          emptyDir: {}
+        - name: var-log-volume
+          emptyDir: {}

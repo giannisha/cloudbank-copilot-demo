@@ -1,0 +1,1 @@
+What is your advice for a person that have on average {monthlyBalance} available balance every month. Assuming that there is a need for paying extra {instalmentAmount} . Is the available balance sufficient? Please, respond with maximum 70 words

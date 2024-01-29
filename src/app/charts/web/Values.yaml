@@ -1,0 +1,21 @@
+appName: web
+
+namespace: default
+
+image:
+  name: cloudbanksimpleacr.azurecr.io/web
+  tag: latest
+
+workload:
+  domainname: "cloudbanksimple-aks.eastus.cloudapp.azure.com" # External Domain Name of the AKS cluster (used for Ingress)
+  # tlsSecret: workload-ingress-secret # k8s secret name for the tls cert - make sure that the name is the same when shared
+  port: 4000 # Port of the container workload
+  service:
+    port: 80 # Service Port (not used for Ingress)
+    type: "ClusterIP" # Service Type (default ClusterIP)
+
+ingress:
+  annotations: # this can be empty but has to exist
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+    nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
+    nginx.ingress.kubernetes.io/proxy-busy-buffers-size: "256k"

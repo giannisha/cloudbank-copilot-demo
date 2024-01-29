@@ -1,0 +1,72 @@
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent:
+    triggerQueries:
+      - feasible
+      - afford
+      - affordance
+      - capable
+      - capability
+
+  actions:
+    - kind: HttpRequestAction
+      id: 7khylr
+      url: http://cloudbanksimple-aks.eastus.cloudapp.azure.com/api/accounts/transactions
+      response: Topic.transactions
+      responseSchema:
+        kind: Table
+        properties:
+          amount: Number
+          category: String
+          date: String
+          description: String
+          from: String
+          id: Number
+          to: String
+          type: String
+
+    - kind: SetVariable
+      id: setVariable_JAXlr6
+      variable: Topic.textTransactions
+      value: |
+        ="[" & 
+        Concat(
+            Topic.transactions, 
+            "{""id"": " & Text(id) & 
+            ", ""from"": """ & from & """" & 
+            ", ""to"": """ & to & """" & 
+            ", ""date"": """ & date & """" & 
+            ", ""description"": """ & description & """" & 
+            ", ""amount"": " & Text(amount) & 
+            ", ""type"": """ & type & """" & 
+            ", ""category"": """ & category & """},"
+        ) & 
+        "]"
+
+    - kind: InvokeFlowAction
+      id: invokeFlowAction_eIwGNw
+      input:
+        binding:
+          number: =Global.loanCalculation.installmentAmount
+          text: =Topic.textTransactions
+
+      output:
+        binding:
+          text: Topic.text
+
+      flowId: 53cfe437-51b1-ee11-a569-7c1e520028fd
+
+    - kind: SetVariable
+      id: setVariable_Pp3JlV
+      variable: Topic.text
+      value: =Concatenate(Topic.text & ". Thank you!")
+
+    - kind: BeginDialog
+      id: 9aG0Ol
+      input:
+        binding:
+          textToSpeech: =Topic.text
+
+      dialog: cr54e_copilotDemoV2.topic.Untitled_465

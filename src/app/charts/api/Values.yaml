@@ -1,0 +1,23 @@
+appName: api
+
+namespace: default
+
+configmap:
+  name: cloudbanksimpleconfigv1.1
+  data:
+    dbConnectionString: "Server=cloudbanksqlserver.database.windows.net,1433; Authentication=Active Directory Managed Identity; Encrypt=True; User Id=286195bf-0832-40f9-9ead-41d4519b14bf; Database=accountsdb"
+
+image:
+  name: cloudbanksimpleacr.azurecr.io/api
+  tag: latest
+
+workload:
+  domainname: "cloudbanksimple-aks.eastus.cloudapp.azure.com" # External Domain Name of the AKS cluster (used for Ingress)
+  # tlsSecret: workload-ingress-secret # k8s secret name for the tls cert - make sure that the name is the same when shared
+  port: 8080 # Port of the container workload
+  service:
+    port: 80 # Service Port (not used for Ingress)
+    type: "ClusterIP" # Service Type (default ClusterIP)
+
+ingress:
+  annotations: # this can be empty but has to exist

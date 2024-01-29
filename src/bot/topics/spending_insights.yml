@@ -1,0 +1,192 @@
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent:
+    triggerQueries:
+      - spending
+
+  actions:
+    - kind: HttpRequestAction
+      id: 2QK4WF
+      url: http://cloudbanksimple-aks.eastus.cloudapp.azure.com/api/accounts/transactions
+      headers:
+        Content-Type: application/json
+
+      response: Topic.AccountsTransactions
+      responseSchema:
+        kind: Table
+        properties:
+          amount: Number
+          category: String
+          date: String
+          description: String
+          from: String
+          id: Number
+          to: String
+          type: String
+
+    - kind: SetVariable
+      id: setVariable_yxiWq1
+      variable: Topic.AccountTransactionsJsonString
+      value: |
+        ="[" & 
+        Concat(
+            Topic.AccountsTransactions, 
+            "{""id"": " & Text(id) & 
+            ", ""from"": """ & from & """" & 
+            ", ""to"": """ & to & """" & 
+            ", ""date"": """ & date & """" & 
+            ", ""description"": """ & description & """" & 
+            ", ""amount"": " & Text(amount) & 
+            ", ""type"": """ & type & """" & 
+            ", ""category"": """ & category & """},"
+        ) & 
+        "]"
+
+    - kind: InvokeFlowAction
+      id: invokeFlowAction_GnyNXv
+      input:
+        binding:
+          text: =Topic.AccountTransactionsJsonString
+
+      output:
+        binding:
+          text: Topic.Text
+
+      flowId: 998afadb-17ae-ee11-a569-7c1e520028fd
+
+    - kind: SendActivity
+      id: sendActivity_s5dRiX
+      activity:
+        text:
+          - "{Topic.Text}"
+        attachments:
+          - kind: ImageCardTemplate
+            title: Spending for the last month
+            image: https://cloudbankfiles.blob.core.windows.net/files/bar-chart.png?sp=r&st=2024-01-21T16:57:40Z&se=2024-02-22T00:57:40Z&spr=https&sv=2022-11-02&sr=b&sig=ebg8mp801LelJ6Kn95IKc7285swGycOZOeUyc18V%2FOA%3D
+
+    - kind: SetVariable
+      id: setVariable_VZlDj6
+      variable: Topic.title
+      value: Financial Advice
+
+    - kind: AdaptiveCardPrompt
+      id: 0xnoKQ
+      repeatCount: 0
+      card: |-
+        {
+            "type": "AdaptiveCard",
+            "body": [
+                {
+                    "type": "TextBlock",
+                    "size": "Medium",
+                    "weight": "Bolder",
+                    "text": "Financial Advice",
+                    "fontType": "Default"
+                },
+                {
+                    "type": "TextBlock",
+                    "text": "Based on your financial history we believe that you can increase your available cash by introducing our Black Belt Credit Card in your product portfolio.",
+                    "id": "description",
+                    "wrap": true
+                },
+                {
+                    "type": "Container"
+                },
+                {
+                    "type": "Image",
+                    "url": "https://cloudbankfiles.blob.core.windows.net/files/credit-card.png?sp=r&st=2024-01-21T16:56:42Z&se=2024-02-22T00:56:42Z&spr=https&sv=2022-11-02&sr=b&sig=SsTlVFnLriCpIXKDRVgcd6poaN%2FUns%2FTjyHFCkeRzY4%3D",
+                    "size": "Large",
+                    "horizontalAlignment": "Center"
+                },
+                {
+                    "type": "Container"
+                }
+            ],
+            "actions": [
+                {
+                    "type": "Action.ShowCard",
+                    "title": "Apply Now",
+                    "card": {
+                        "type": "AdaptiveCard",
+                        "body": [
+                            {
+                                "type": "Input.ChoiceSet",
+                                "id": "spendingLimit",
+                                "choices": [
+                                    {
+                                        "title": "€ 1000",
+                                        "value": "1000"
+                                    },
+                                    {
+                                        "title": "€ 1500",
+                                        "value": "1500"
+                                    },
+                                    {
+                                        "title": "€ 2000",
+                                        "value": "2000"
+                                    },
+                                    {
+                                        "title": "€ 3000",
+                                        "value": "3000"
+                                    }
+                                ],
+                                "value": "1500",
+                                "label": "Spending Limit"
+                            },
+                            {
+                                "type": "Input.Text",
+                                "id": "comment",
+                                "placeholder": "Add a comment",
+                                "isMultiline": true
+                            }
+                        ],
+                        "actions": [
+                            {
+                                "type": "Action.Submit",
+                                "title": "Submit"
+                            }
+                        ],
+                        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                        "version": "1.5"
+                    }
+                }
+            ],
+            "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+            "version": "1.5"
+        }
+      output:
+        binding:
+          actionSubmitId: Topic.actionSubmitId
+          comment: Topic.comment
+          spendingLimit: Topic.spendingLimit
+
+      outputType:
+        properties:
+          actionSubmitId: String
+          comment: String
+          spendingLimit: String
+
+    - kind: ConditionGroup
+      id: conditionGroup_igHmDU
+      conditions:
+        - id: conditionItem_Q0nody
+          condition: =Topic.actionSubmitId = "Submit"
+          actions:
+            - kind: HttpRequestAction
+              id: Vy2Fc6
+              method: Post
+              url: http://cloudbanksimple-aks.eastus.cloudapp.azure.com/api/history
+              headers:
+                Content-Type: application/json
+
+              body:
+                kind: JsonRequestContent
+                content: "={comments: Topic.comment, description: Concatenate(\" Application for Black Belt Credit Card with spending limit at €\" & Topic.spendingLimit), imgSrc: \"https://cloudbankfiles.blob.core.windows.net/files/credit-card.png?sp=r&st=2024-01-21T16:56:42Z&se=2024-02-22T00:56:42Z&spr=https&sv=2022-11-02&sr=b&sig=SsTlVFnLriCpIXKDRVgcd6poaN%2FUns%2FTjyHFCkeRzY4%3D\", title: \"Credit Card Application\"}"
+
+              responseSchema: Any
+
+    - kind: SendActivity
+      id: sendActivity_29GuRS
+      activity: Thank you

@@ -1,0 +1,44 @@
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent:
+    triggerQueries:
+      - loan
+      - " lend"
+      - borrow
+
+  actions:
+    - kind: InvokeFlowAction
+      id: invokeFlowAction_qpSlSv
+      input:
+        binding:
+          text: =System.Activity.Text
+
+      output:
+        binding:
+          amount: Topic.amount
+          months: Topic.months
+
+      flowId: 64dd285f-20b1-ee11-a569-7c1e520028fd
+
+    - kind: SetVariable
+      id: setVariable_syG2We
+      variable: Topic.loanCalcUrl
+      value: =Concatenate("http://cloudbanksimple-aks.eastus.cloudapp.azure.com/api/loans/calc?amount=" & Topic.amount & "&months=" & Topic.months)
+
+    - kind: HttpRequestAction
+      id: bwTSVT
+      url: =Topic.loanCalcUrl
+      response: Global.loanCalculation
+      responseSchema:
+        kind: Record
+        properties:
+          installmentAmount: Number
+          interestRate: Number
+          loanAmount: Number
+          months: Number
+
+    - kind: SendActivity
+      id: sendActivity_42HzxP
+      activity: With an interest rate at {Concatenate(Global.loanCalculation.interestRate * 100 & "%")} the calculated instalment per month will be € {Global.loanCalculation.installmentAmount} 

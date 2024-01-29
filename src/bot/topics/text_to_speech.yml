@@ -1,0 +1,57 @@
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent:
+    triggerQueries:
+      - speech
+
+  actions:
+    - kind: SetVariable
+      id: setVariable_wDirJN
+      variable: Topic.speechEndpoint
+      value: http://cloudbanksimple-aks.eastus.cloudapp.azure.com/speech-api/generate
+
+    - kind: HttpRequestAction
+      id: wngdbz
+      method: Post
+      url: =Topic.speechEndpoint
+      headers:
+        Content-Type: application/json
+
+      body:
+        kind: JsonRequestContent
+        content: "={text: Topic.textToSpeech}"
+
+      errorHandling: {}
+      requestTimeoutInMilliseconds: 180000
+      response: Topic.speechResponse
+      responseSchema:
+        kind: Record
+        properties:
+          error: Blank
+          url: String
+
+    - kind: ConditionGroup
+      id: conditionGroup_NM88bz
+      conditions:
+        - id: conditionItem_91X7fn
+          condition: =IsBlank(Topic.speechResponse.error)
+          actions:
+            - kind: SendActivity
+              id: sendActivity_NPwS0t
+              activity:
+                attachments:
+                  - kind: VideoCardTemplate
+                    media: =Topic.speechResponse.url
+
+      elseActions:
+        - kind: SendActivity
+          id: sendActivity_YCxWiV
+          activity: Speech service is currently unavailable
+
+inputType:
+  properties:
+    textToSpeech:
+      displayName: textToSpeech
+      type: String
